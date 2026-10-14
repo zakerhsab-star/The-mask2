@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink">#14101F</color>
+    <color name="calc_bg">#3C4043</color>
+    <color name="notes_bg">#F5C242</color>
+    <color name="clock_bg">#1F2A44</color>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- القناع مع فتحتي العينين -->
+    <path
+        android:fillColor="#F4EFE7"
+        android:fillType="evenOdd"
+        android:pathData="M50,22 C35,22 27,27 27,40 C27,59 37,75 50,77 C63,75 73,59 73,40 C73,27 65,22 50,22 Z M34,40 Q40,33 47,41 Q40,47 34,40 Z M53,41 Q60,33 66,40 Q60,47 53,41 Z" />
+    <!-- الابتسامة -->
+    <path
+        android:pathData="M41,58 Q50,65 59,58"
+        android:strokeColor="#14101F"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <!-- حلقة فاصلة حول الترس -->
+    <path
+        android:fillColor="#1A1230"
+        android:pathData="M54,71 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 Z" />
+    <!-- الترس -->
+    <path
+        android:fillColor="#E2B455"
+        android:fillType="evenOdd"
+        android:pathData="M67.4,61.3 L68.0,58.2 L72.0,58.2 L72.6,61.3 L75.0,62.3 L77.6,60.5 L80.5,63.4 L78.7,66.0 L79.7,68.4 L82.8,69.0 L82.8,73.0 L79.7,73.6 L78.7,76.0 L80.5,78.6 L77.6,81.5 L75.0,79.7 L72.6,80.7 L72.0,83.8 L68.0,83.8 L67.4,80.7 L65.0,79.7 L62.4,81.5 L59.5,78.6 L61.3,76.0 L60.3,73.6 L57.2,73.0 L57.2,69.0 L60.3,68.4 L61.3,66.0 L59.5,63.4 L62.4,60.5 L65.0,62.3 Z M65.8,71 a4.2,4.2 0 1,0 8.4,0 a4.2,4.2 0 1,0 -8.4,0 Z" />
+</vector>

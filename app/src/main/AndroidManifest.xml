@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- اسم محايد في قائمة تطبيقات النظام. الاسم والأيقونة على الشاشة الرئيسية بيجوا من الـ alias المفعّل. -->
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_calc"
+        android:label="Utilities"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TheMask">
+
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="Utilities" />
+
+        <!-- تمويه الأيقونة: واحد بس يكون مفعّل في كل وقت -->
+        <activity-alias
+            android:name=".AliasCalc"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_calc"
+            android:label="Calculator"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".AliasNotes"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_notes"
+            android:label="Notes"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".AliasClock"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_clock"
+            android:label="Clock"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".AliasMask"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="The Mask"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>
