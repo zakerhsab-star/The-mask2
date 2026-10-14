@@ -79,6 +79,9 @@ class MainActivity : FragmentActivity() {
     private var unlocked by mutableStateOf(true)
     private var stoppedAt = 0L
 
+    /** واجهة التمويه (الحاسبة الآن) لسه معروضة؟ بتبقى false لحد ما الكود السري يتكتب صح. */
+    private var revealed by mutableStateOf(true)
+
     private val binderReceived = Shizuku.OnBinderReceivedListener { shizukuTick++ }
     private val binderDead = Shizuku.OnBinderDeadListener { shizukuTick++ }
     private val permListener = Shizuku.OnRequestPermissionResultListener { _, _ -> shizukuTick++ }
@@ -96,6 +99,11 @@ class MainActivity : FragmentActivity() {
         unlocked = !prefs.lockEnabled
         applySecureFlag()
 
+        // التمويه الحالي: لو حاسبة، الواجهة الحقيقية مستخبية لحد ما الكود السري يتكتب.
+        // الباقي (ساعة/ملاحظات/الشكل الأصلي) لسه ما بُنيش فعلياً، فبيدخلوا على طول مؤقتاً.
+        val currentDisguise = Disguise.values().firstOrNull { it.alias == prefs.disguise } ?: Disguise.CALC
+        revealed = currentDisguise != Disguise.CALC
+
         val store = FrozenStore(this)
         val freezer = AppFreezer(store)
         val icons = IconCache(this)
@@ -104,8 +112,11 @@ class MainActivity : FragmentActivity() {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 MaskTheme {
                     Box(Modifier.fillMaxSize().background(InkBackdrop)) {
-                        if (unlocked) Root(store, freezer, prefs, icons)
-                        else LockScreen()
+                        when {
+                            !revealed -> Calculator(prefs) { revealed = true }
+                            unlocked -> Root(store, freezer, prefs, icons)
+                            else -> LockScreen()
+                        }
                     }
                 }
             }
@@ -114,9 +125,11 @@ class MainActivity : FragmentActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (prefs.lockEnabled && stoppedAt != 0L &&
-            SystemClock.elapsedRealtime() - stoppedAt > RELOCK_AFTER_MS
-        ) unlocked = false
+        if (stoppedAt != 0L && SystemClock.elapsedRealtime() - stoppedAt > RELOCK_AFTER_MS) {
+            if (prefs.lockEnabled) unlocked = false
+            val d = Disguise.values().firstOrNull { it.alias == prefs.disguise } ?: Disguise.CALC
+            if (d == Disguise.CALC) revealed = false // رجوع لواجهة الحاسبة بعد الغياب
+        }
     }
 
     override fun onResume() {
@@ -690,6 +703,8 @@ class MainActivity : FragmentActivity() {
         var lockOn by remember { mutableStateOf(prefs.lockEnabled) }
         var lockError by remember { mutableStateOf("") }
         var disguise by remember { mutableStateOf(Disguise.values().firstOrNull { it.alias == prefs.disguise } ?: Disguise.CALC) }
+        var codeInput by remember { mutableStateOf(prefs.secretCode) }
+        var codeSaved by remember { mutableStateOf(true) }
         val ready = remember(shizukuTick) { ShizukuShell.isReady() }
         val granted = remember(shizukuTick) { ready && ShizukuShell.hasPermission() }
 
@@ -797,6 +812,45 @@ class MainActivity : FragmentActivity() {
                             Text(d.title, fontSize = 12.sp, color = Palette.Porcelain, maxLines = 1)
                         }
                     }
+                }
+
+                Spacer(Modifier.height(6.dp))
+                SectionTitle("الكود السري")
+                Text(
+                    "لما التمويه يبقى \"الحاسبة\"، اكتب هذا الكود في الحاسبة ودوس \"=\" عشان يفتح التطبيق الحقيقي. أرقام فقط.",
+                    fontSize = 12.sp,
+                    color = Palette.Mist
+                )
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = codeInput,
+                        onValueChange = {
+                            if (it.length <= 12 && it.all { ch -> ch.isDigit() }) {
+                                codeInput = it
+                                codeSaved = false
+                            }
+                        },
+                        singleLine = true,
+                        placeholder = { Text("مثال: 2026", color = Palette.Mist) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Palette.Porcelain,
+                            unfocusedTextColor = Palette.Porcelain,
+                            focusedContainerColor = Palette.Velvet,
+                            unfocusedContainerColor = Palette.Velvet,
+                            focusedBorderColor = Palette.Brass,
+                            unfocusedBorderColor = Palette.VelvetHi,
+                            cursorColor = Palette.Brass
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(
+                        enabled = codeInput.isNotBlank() && !codeSaved,
+                        onClick = { prefs.secretCode = codeInput; codeSaved = true }
+                    ) { Text(if (codeSaved) "تم الحفظ" else "حفظ", color = Palette.Brass) }
                 }
 
                 Spacer(Modifier.height(6.dp))

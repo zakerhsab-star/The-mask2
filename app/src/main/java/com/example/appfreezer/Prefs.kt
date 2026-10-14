@@ -20,4 +20,9 @@ class Prefs(context: Context) {
     var disguise: String
         get() = p.getString("disguise", "AliasCalc") ?: "AliasCalc"
         set(v) { p.edit().putString("disguise", v).apply() }
+
+    /** الكود السري اللي بيفتح التطبيق من واجهة التمويه (الحاسبة الآن). أرقام فقط. */
+    var secretCode: String
+        get() = p.getString("secret_code", "2026") ?: "2026"
+        set(v) { p.edit().putString("secret_code", v).apply() }
 }
